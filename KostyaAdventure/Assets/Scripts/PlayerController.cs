@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Joystick joystickMove;
     [SerializeField] Joystick joystickAttack;
     [HideInInspector] public Vector2 Axis;
+    [SerializeField] int damage;
 
     private void Update()
     {
@@ -43,6 +44,7 @@ public class PlayerController : MonoBehaviour
         if (joystickAttack.Horizontal != 0 && joystickAttack.Vertical != 0 && Time.time > nextAttack)
         {
             GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+            bullet.GetComponent<Bullet>().Damage = damage;
             bullet.transform.Rotate(0, 0, Random.Range(0, 1000));
             bullet.GetComponent<Rigidbody2D>().AddForce(joystickAttack.Direction * bulletForce, ForceMode2D.Impulse);
             nextAttack = Time.time + 1f / AttackRate;

@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class ResolutionScaler : MonoBehaviour
 {
-    [Range(0, 16)] public float Scale = 2;
+    [Range(0.1f, 16)] public float Scale = 2;
 
     private Camera cameraComponent;
     private RenderTexture texture;
