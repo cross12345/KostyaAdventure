@@ -8,6 +8,7 @@ public class Enemy_Basic : MonoBehaviour
     [SerializeField] protected float speed;
     [SerializeField] protected int Health;
     [SerializeField] protected int Max_Health;
+    [SerializeField] protected int Damage;
     [SerializeField] protected GameObject player;
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected Animator anim;
@@ -15,6 +16,8 @@ public class Enemy_Basic : MonoBehaviour
     [SerializeField] protected bool DrawFOV;
     [SerializeField] protected LayerMask playerLayer;
     [SerializeField] protected float DestroyTime;
+    [SerializeField] float AttackRate;
+    private float nextAttack;
     public  bool Dead = false;
     protected Collider2D PlayerInFov;
     private void Start()
@@ -22,9 +25,17 @@ public class Enemy_Basic : MonoBehaviour
         player = FindObjectOfType<PlayerController>().gameObject;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         PlayerInFov = Physics2D.OverlapCircle(transform.position, FOV, playerLayer);
+
+        Collider2D PlayerAttack = Physics2D.OverlapCircle(transform.position, 1, playerLayer);
+        if (PlayerAttack != null && Time.time > nextAttack)
+        {
+            player.GetComponent<PlayerController>().ChangeHealth(-Damage, true);
+            nextAttack = Time.time + 1f / AttackRate;
+        }
+
         if (PlayerInFov != null && !Dead)
         {
             Move();
@@ -77,6 +88,7 @@ public class Enemy_Basic : MonoBehaviour
     protected void Death()
     {
         Dead = true;
+        GetComponentInChildren<BoxCollider2D>().enabled = false;
         anim.SetTrigger("Dead");
         anim.Play("HeavyHurt");
         Invoke("Destroy", DestroyTime);
@@ -85,4 +97,5 @@ public class Enemy_Basic : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
 }

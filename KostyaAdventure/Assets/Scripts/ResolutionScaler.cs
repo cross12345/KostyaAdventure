@@ -18,13 +18,14 @@ public class ResolutionScaler : MonoBehaviour
     }
 
     private void CreateTexture()
-    {
+    {        
+        cameraComponent = GetComponent<Camera>();
         int width = Mathf.RoundToInt(Screen.width / Scale);
         int height = Mathf.RoundToInt(Screen.height / Scale);
-        texture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
+        texture = new RenderTexture(width, height,24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default);
         texture.antiAliasing = 1;
 
-        cameraComponent = GetComponent<Camera>();
+
     }
 
 #if UNITY_EDITOR

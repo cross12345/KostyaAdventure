@@ -49,15 +49,17 @@ MonoBehaviour:
   speed: 0.2
   Health: 20
   Max_Health: 20
+  Damage: 15
   player: {fileID: 0}
   rb: {fileID: 1921378003}
   anim: {fileID: 1862653315864402520}
-  FOV: 6
+  FOV: 18
   DrawFOV: 0
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
   DestroyTime: 3.5
+  AttackRate: 2
   Dead: 0
 --- !u!50 &1921378003
 Rigidbody2D:
@@ -152,7 +154,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: -1839964975419308576, guid: 5b897777c3c8d194ba82f200bd9b2950, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

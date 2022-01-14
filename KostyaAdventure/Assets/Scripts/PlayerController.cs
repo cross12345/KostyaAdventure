@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float bulletForce;
     [SerializeField] float AttackRate;
     private float nextAttack;
+    [Header("Stats")]
+    public bool Dead = false;
+    public int Health;
+    public int Max_Health;
+    [SerializeField] Image HealthBar;
+    [SerializeField] float DestroyTime;
     [Header("Other")]
     public Rigidbody2D rb;
     [SerializeField] Joystick joystickMove;
@@ -20,7 +27,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Vector2 Axis;
     [SerializeField] int damage;
 
-    private void Update()
+    private void FixedUpdate()
     {
         Axis = new Vector2(joystickMove.Horizontal, joystickMove.Vertical);
         Attack();
@@ -76,5 +83,35 @@ public class PlayerController : MonoBehaviour
     void Move()
     {
         rb.velocity = new Vector2(Axis.x * speed, Axis.y * speed);
+    }
+
+    public void ChangeHealth(int count, bool hurt)
+    {
+        Health += count;
+        float fH = Health;
+        float fHM = Max_Health;
+        HealthBar.fillAmount = fH / fHM;
+        if (hurt)
+        {
+            anim.Play("PlayerHurt");
+        }
+        if (Health > Max_Health) { Health = Max_Health; }
+        if (Health <= 0)
+        {
+            Health = 0;
+            Death();
+        }
+    }
+    protected void Death()
+    {
+        Dead = true;
+        GetComponentInChildren<BoxCollider2D>().enabled = false;
+        anim.SetTrigger("Dead");
+        anim.Play("HeavyHurt");
+        Invoke("Destroy", DestroyTime);
+    }
+    protected void Destroy()
+    {
+        
     }
 }
