@@ -12,14 +12,11 @@ public class Enemy_Basic : MonoBehaviour
     [SerializeField] protected GameObject player;
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected Animator anim;
-    [SerializeField] protected float FOV;
-    [SerializeField] protected bool DrawFOV;
     [SerializeField] protected LayerMask playerLayer;
     [SerializeField] protected float DestroyTime;
     [SerializeField] float AttackRate;
     private float nextAttack;
     public  bool Dead = false;
-    protected Collider2D PlayerInFov;
     private void Start()
     {
         player = FindObjectOfType<PlayerController>().gameObject;
@@ -27,8 +24,6 @@ public class Enemy_Basic : MonoBehaviour
 
     private void FixedUpdate()
     {
-        PlayerInFov = Physics2D.OverlapCircle(transform.position, FOV, playerLayer);
-
         Collider2D PlayerAttack = Physics2D.OverlapCircle(transform.position, 1, playerLayer);
         if (PlayerAttack != null && Time.time > nextAttack)
         {
@@ -36,7 +31,7 @@ public class Enemy_Basic : MonoBehaviour
             nextAttack = Time.time + 1f / AttackRate;
         }
 
-        if (PlayerInFov != null && !Dead)
+        if (!Dead && !player.GetComponent<PlayerController>().Dead)
         {
             Move();
             anim.SetInteger("State", 1);
@@ -62,15 +57,6 @@ public class Enemy_Basic : MonoBehaviour
             GetComponentInChildren<SpriteRenderer>().flipX = false;
         }
     }
-
-    protected void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        if (DrawFOV)
-        {
-            Gizmos.DrawWireSphere(transform.position, FOV);
-        }
-    }
     public void ChangeHealth(int count, bool hurt)
     {
         Health += count;
@@ -89,6 +75,7 @@ public class Enemy_Basic : MonoBehaviour
     {
         Dead = true;
         GetComponentInChildren<BoxCollider2D>().enabled = false;
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         anim.SetTrigger("Dead");
         anim.Play("HeavyHurt");
         Invoke("Destroy", DestroyTime);

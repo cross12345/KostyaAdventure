@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CameraMovement : MonoBehaviour
 {
-
+	public float vel;
 	public float interpVelocity;
 	public float minDistance;
 	public float followDistance;
@@ -30,7 +30,7 @@ public class CameraMovement : MonoBehaviour
 
 			targetPos = transform.position + (targetDirection.normalized * interpVelocity * Time.deltaTime);
 
-			transform.position = Vector3.Lerp(transform.position, targetPos + offset, 0.25f);
+			transform.position = Vector3.Lerp(transform.position, targetPos + offset, vel);
 
 		}
 	}

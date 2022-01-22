@@ -26,14 +26,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Joystick joystickAttack;
     [HideInInspector] public Vector2 Axis;
     [SerializeField] int damage;
+    [SerializeField] GameObject GameOver;
 
+    private void Start()
+    {
+        GameOver.SetActive(false);
+    }
     private void FixedUpdate()
     {
         Axis = new Vector2(joystickMove.Horizontal, joystickMove.Vertical);
-        Attack();
-        Move();
-        Animation();
-        Rotate();
+        if (!Dead)
+        {
+            Attack();
+            Move();
+            Animation();
+            Rotate();
+        }
     }
     void Animation()
     {
@@ -106,12 +114,12 @@ public class PlayerController : MonoBehaviour
     {
         Dead = true;
         GetComponentInChildren<BoxCollider2D>().enabled = false;
-        anim.SetTrigger("Dead");
-        anim.Play("HeavyHurt");
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        anim.SetTrigger("Death");
         Invoke("Destroy", DestroyTime);
     }
     protected void Destroy()
     {
-        
+        GameOver.SetActive(true);
     }
 }
